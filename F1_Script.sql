@@ -2997,6 +2997,31 @@ GRANT SELECT, INSERT, UPDATE ON *.* TO 'user_modificacion'@'localhost';
 
 -- Ninguno de los dos usuarios podrá eliminar registros de ninguna tabla, ya que no se les ha otorgado ese permiso
 
+-- Stored procedures
+
+-- Obtener el puntaje total de un constructor en una carrera específica:
+
+DELIMITER //
+CREATE PROCEDURE GetConstructorRacePoints(IN constructorID INT, IN raceID INT, OUT totalPoints INT)
+BEGIN
+    SELECT SUM(points) INTO totalPoints
+    FROM Construtor_results
+    WHERE constructorID = constructorID AND raceID = raceID;
+END //
+DELIMITER ;
+
+-- Obtener la lista de pilotos en orden de posición en un campeonato de constructores:
+
+DELIMITER //
+CREATE PROCEDURE GetDriversByConstructorStandings(IN raceID INT)
+BEGIN
+    SELECT d.driverId, d.driverRef, d.forename, d.surname, ds.position
+    FROM Drivers d
+    INNER JOIN Drivers_standings ds ON d.driverId = ds.driverId
+    WHERE ds.raceID = raceID
+    ORDER BY ds.position;
+END //
+DELIMITER ;
 
 
 – BACK UP
